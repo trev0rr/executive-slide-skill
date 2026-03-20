@@ -38,7 +38,7 @@ The skill enforces strict design constraints: intentional asymmetry, 20% minimum
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/executive-slide-skill.git
+git clone https://github.com/trev0rr/executive-slide-skill.git
 
 # Copy to your personal skills directory
 cp -r executive-slide-skill/executive-slide ~/.claude/skills/executive-slide
@@ -55,7 +55,7 @@ cp -r path/to/executive-slide-skill/executive-slide .claude/skills/executive-sli
 ### Via Plugin Marketplace (if registered)
 
 ```
-/plugin marketplace add YOUR_USERNAME/executive-slide-skill
+/plugin marketplace add trev0rr/executive-slide-skill
 ```
 
 ## Layout Archetypes
@@ -119,4 +119,4 @@ Apache 2.0 — see [LICENSE](LICENSE) for details.
 
 ---
 
-**Created by [Trevor James](https://github.com/YOUR_USERNAME)** — MBA candidate at Indiana University Kelley School of Business, founder of [OPAL](https://github.com/YOUR_USERNAME), and president of MBAi Club.
+**Created by [Trevor James](https://github.com/trev0rr)** — MBA candidate at Indiana University Kelley School of Business, founder of [OPAL](https://github.com/trev0rr), and president of MBAi Club.
