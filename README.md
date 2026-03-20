@@ -26,6 +26,10 @@ The skill enforces strict design constraints: intentional asymmetry, 20% minimum
 | "Build a strategy deck comparing our current GTM motion vs. a PLG pivot" | Multi-slide deck with Tension layout, Three Pillars argument, and recommendation close |
 | "Here's our monthly ARR data for the last 12 months — make it boardroom-ready" | Visual Monolith with CSS-rendered bar chart, highlighted inflection point, desaturated context |
 
+Example Slide Screenshot:
+<img width="1041" height="591" alt="Screenshot 2026-03-20 at 12 57 09 PM" src="https://github.com/user-attachments/assets/84a422f7-1d8b-47f3-9789-6a4d9f9cc312" />
+
+
 ## Installation
 
 ### For Claude.ai (Custom Skills)
