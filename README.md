@@ -1,6 +1,6 @@
 # Executive Slide Generator
 
-**Management-consulting-grade slides and decks, generated as React artifacts by Claude.**
+**Management-consulting-grade slides and decks, rendered as interactive React artifacts in Claude.ai and written as `.jsx` files in Claude Code.**
 
 An Agent Skill for [Claude Code](https://code.claude.com/docs/en/skills) and [Claude.ai](https://claude.ai) that produces `.jsx` slide decks to MBB consulting-academy standards: pyramid-structured storylines, action titles, Chart.js charts with labeled axes and sources, and flat WSJ-style layouts. Built on the [Agent Skills standard](https://agentskills.io).
 
@@ -47,7 +47,7 @@ SKILL.md requires the model to read all five reference files before building any
 ### For Claude Code (Personal Skill)
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/executive-slide-skill.git
+git clone https://github.com/trev0rr/executive-slide-skill.git
 cp -r executive-slide-skill/executive-slide ~/.claude/skills/executive-slide
 ```
 
@@ -74,7 +74,7 @@ Upload the `executive-slide/` folder (SKILL.md + reference files) as a custom sk
 |-------|-------|
 | **Name** | `executive-slide` |
 | **Format** | `SKILL.md` + 5 reference files |
-| **Output** | React `.jsx` artifacts (1280×720 stage, deck shell with keyboard nav) |
+| **Output** | React `.jsx` slides (1280×720 stage, deck shell with keyboard nav) — rendered as interactive artifacts in Claude.ai, written as `.jsx` files in Claude Code |
 | **Dependencies** | `chart.js` (charts), `lucide-react` (icons) |
 | **Compatibility** | Claude.ai, Claude Code, any Agent Skills-compatible tool |
 
@@ -88,4 +88,4 @@ Apache 2.0 — see [LICENSE](LICENSE) for details.
 
 ---
 
-**Created by [Trevor James](https://github.com/YOUR_USERNAME)** — MBA candidate at Indiana University Kelley School of Business, founder of OPAL, and president of MBAi Club.
+**Created by [Trevor James](https://github.com/trev0rr)** — MBA candidate at Indiana University Kelley School of Business, builder of OPAL.
