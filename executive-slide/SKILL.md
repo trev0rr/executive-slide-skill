@@ -1,237 +1,140 @@
 ---
 name: executive-slide
-description: Generate elite MBB-tier executive strategy slides as React artifacts. Use when the user asks for an executive slide, strategy slide, McKinsey-style slide, consulting slide, or executive deck. Produces single slides or multi-slide decks with prev/next navigation. Outputs polished React (.jsx) artifacts styled to $50k strategy deck standards — not SaaS dashboards, not startup pitches.
+description: Use when the user asks for an executive slide, strategy slide, consulting slide, McKinsey/MBB-style slide, executive or strategy deck, board deck, or wants data/analysis made "boardroom-ready" or presented to leadership. Produces single slides or multi-slide React (.jsx) artifact decks to management-consulting standards.
 ---
 
 # Executive Slide Generator
 
-You are the Global Head of Information Design at McKinsey Digital. You operate at the intersection of business strategy, cognitive psychology, and elite UI craftsmanship (Apple restraint × Stripe precision × MBB rigor).
+Build slides to the standard of a top-tier consulting firm: flat, dense-but-clear analytical pages with action titles, labeled charts, and real sources — pages that stand alone without narration. Not SaaS dashboards, not startup pitches, not decorated bullet lists.
 
-You do not generate slides. You manufacture **executive persuasion assets**.
+## Required reading
 
-## The Standard
+**Before building any slide or deck, read every file in this skill's `reference/` directory:**
 
-- **Feel:** Custom-designed, not templated
-- **Value:** Looks like a $50k strategy deck
-- **Audience:** Suitable for a Partner presenting to a Fortune 100 CEO
-- **Failure State:** If it looks like a SaaS dashboard, startup pitch, or generic PowerPoint — you have failed
+1. `reference/storylining.md` — Pyramid Principle, MECE trees, deck types, headline-flow test
+2. `reference/layout.md` — canvas, grid, title block, footer, the 9 layout patterns
+3. `reference/charts.md` — chart selection, labeling rules, Chart.js implementation
+4. `reference/typography.md` — the type scale and palette roles
+5. `reference/language.md` — action titles, copy rules, the humanizer pass
 
-## Output Format
+Do not build from memory of these files' names. Read them, then build.
 
-Output a single `.jsx` file as a React artifact.
+## Hard rules
 
-- **Single slide:** One full-bleed `w-full h-[600px]` canvas. No navigation chrome.
-- **Multi-slide deck:** Wrap slides in a deck shell with prev/next navigation. Claude decides slide count based on content density and narrative arc. Navigation controls must be minimal and elegant — small arrows or dots, never chunky buttons.
+Violating any of these is a failed slide, regardless of how it looks:
 
-### Deck Shell Pattern (multi-slide only)
+1. **Every chart is a real chart object** — Chart.js in web artifacts, native PowerPoint charts (python-pptx chart API) in .pptx. No CSS bars, no hand-drawn SVG charts, no screenshots, no placeholders.
+2. **Every analytical claim is attributed** — a source line per layout.md §4; when matching a house template that has no source convention, provenance is stated in the content instead. No fabricated stamps.
+3. **No text below 15px / 11pt anywhere** — including chart ticks and labels — and only integer sizes from a defined scale (typography.md's, or one derived the same way from a house template).
+4. **Every body-slide title carries the slide's message**: by default a complete sentence stating the so-what, ≤2 lines; a user-specified house voice may shorten the form, never the claim. Never a topic label.
+5. **Pyramid + MECE structure**: conclusion first; titles alone must tell the story (headline-flow test).
+6. **Flat consulting style**: white background, primary-color title + 2px rule, aligned columns, ≥20% whitespace. No cards, shadows, gradients, or rounded containers (unless a house template says otherwise — see Overrides).
+7. **Every color maps to a palette role** (primary / secondary / highlight / greyscale). No decorative color, no rainbow charts.
+8. **Never invent numbers.** A figure the user didn't provide and the source material doesn't contain renders as a visible `[ CONFIRM · … ]` placeholder — never a plausible-looking value.
+
+## Overrides (user context beats skill defaults)
+
+- **Output format.** The React `.jsx` artifact is the default, not a cage. If the user specifies another format (`.pptx`, standalone HTML, PDF), build it with the right tool (e.g. python-pptx for `.pptx`) and keep the entire workflow, hard rules, and self-check. For `.pptx`: 16:9 = 13.333×7.5 in, pt sizes map 1:1 from the type scale's pt column, letter-spacing via the run's `spc` XML attribute.
+- **House style.** When the user supplies an existing deck or brand system to match, its design language — background, typography, kicker/label conventions, headline style, footer, emphasis devices — overrides layout.md and typography.md defaults. Extract exact tokens from the best source available (an HTML/CSS version beats eyeballing a PDF; check the filesystem for one). Structural discipline still applies in full: storyline, slide plans, the type floor, palette-role mapping of the brand's colors, the humanizer pass, visible placeholders, and the self-check.
+- **Voice.** A user-specified voice (short declaratives, no Oxford commas, named-team informality) overrides the default title/copy register. Apply the humanizer pass in that voice; the banned-word list still applies.
+
+## Workflow
+
+### Step 0 — Intake (conditional; before anything else)
+
+Check whether the conversation/uploads already establish: **(a)** brand kit or brand colors, **(b)** audience and objective (persuasive vs. informative), **(c)** deck type (summary / deep dive / backup), **(d)** delivery context (presented live vs. standalone read).
+
+- If **any** are missing, ask for **all missing items in one batched message**, stating the default for each so the user can reply "use defaults": defaults are maroon fallback palette; senior-executive audience, persuasive; summary deck; standalone read.
+- If all four are known, skip intake entirely and say nothing about it.
+- **Never ask questions after the build starts.**
+
+### Step 1 — Storyline
+
+Work out (and show briefly): the governing question, the governing thought (one-sentence answer), the 2–4 MECE branches, and the **ordered action-title list** for every slide. Run the headline-flow test: the titles alone, read in order, must tell the complete story. Fix the storyline before designing anything. Decks with 4+ content slides get a title slide and an executive-summary slide prepended (storylining.md §8).
+
+### Step 2 — Slide plans (think before output)
+
+For **each** slide, before writing any JSX, write a 4-line plan in your visible response:
+
+- **Message:** the action title (final wording)
+- **Evidence:** which facts/data prove it, and their source
+- **Layout:** the named pattern from layout.md §5, and why
+- **Chart:** the chart type from charts.md §2 (with the comparison it shows), or "no chart" with the reason
+
+Check each plan against the Hard rules before rendering. If a plan fails (e.g., no source exists for a claim), fix the plan, not the rendered slide.
+
+### Step 3 — Render
+
+Build the artifact per Output format below, following layout.md / charts.md / typography.md exactly.
+
+### Step 4 — Humanizer pass
+
+Re-read every piece of copy on every slide against language.md §3: banned words, banned patterns, the four rewrite tests. Rewrite in place. This pass is mandatory even when the copy "seems fine."
+
+### Step 5 — Self-check
+
+Run the checklist at the bottom of this file against **every slide**. Fix all failures before delivering. Then confirm in one line that the deck passed (e.g., "Self-check: 5/5 slides pass").
+
+## Output format
+
+Single `.jsx` React artifact.
+
+- **Canvas:** every slide renders on a fixed 1280×720 stage, scaled to fit the viewport by transform-scaling the whole stage (never by changing font sizes):
 
 ```jsx
-// Deck wrapper with keyboard nav (← →) and minimal click controls
-// Each slide is a function component: Slide1, Slide2, ...
-// Navigation: bottom-center dot indicators + subtle arrow buttons
-// Transition: clean crossfade or instant swap — no slide animations
-// Every slide gets the standard canvas: w-full h-[600px] aspect-video
+function Stage({ children }) {
+  // Scale the 1280x720 slide to the available width
+  const ref = useRef(null);
+  const [scale, setScale] = useState(1);
+  useEffect(() => {
+    const update = () => setScale(Math.min(ref.current.offsetWidth / 1280, 1));
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+  return (
+    <div ref={ref} className="w-full" style={{ height: 720 * scale }}>
+      <div style={{ width: 1280, height: 720, transform: `scale(${scale})`, transformOrigin: "top left" }}>
+        {children}
+      </div>
+    </div>
+  );
+}
 ```
 
-### Slide Count Guidance
+- **Single slide:** one stage, no navigation chrome.
+- **Deck:** slides as separate components (`Slide1`, `Slide2`, …), a shell with keyboard nav (←/→), small bottom-center dot indicators, subtle prev/next arrows. Instant swap, no transitions. Only the active slide is mounted (so Chart.js re-creates cleanly).
+- **Charts:** `import Chart from "chart.js/auto"`; canvas + `useRef` + `useEffect` with `chart.destroy()` cleanup; `animation: false`; fonts and colors per charts.md §5.
+- **Icons:** `lucide-react`, `strokeWidth={1.5}`, used only as row/pillar markers per layout.md.
+- **Fonts:** Tailwind arbitrary values matching the scale (`text-[16px]` etc.). `text-xs`/`text-sm` are banned.
 
-Let the content dictate. Typical patterns:
-- **Single insight or metric** → 1 slide
-- **Executive brief** → 3–5 slides
-- **Strategy narrative** → 5–8 slides
-- **Comprehensive analysis** → 8–12 slides
-- Never exceed 15. If more content exists, increase abstraction per slide.
+## Worked examples
 
-### Narrative Arc for Multi-Slide Decks
+**1. Title: label → claim.**
+- Bad: title "Revenue Growth Analysis" over a bar chart, bullets "Revenue grew significantly," "Margins under pressure."
+- Good: title "50% annual growth with declining profitability is unsustainable — we need a strategy that balances both." Chart + evidence column (layout 5.1): combo Chart.js bar+line (revenue columns in primary, OI% black line), "48% CAGR" callout, right column of bold-metric evidence blocks ("48% CAGR", "250+ new hires", "−600bps OI"), source line "Source: Client financials, FY2014–17; team analysis."
+- Why: the bad slide makes the reader do the analysis; the good slide asserts the conclusion and proves it, with axes, units, and a source.
 
-Structure decks with intentional narrative energy:
-1. **Opening Frame** — Context-setting. The "why now" or situation overview.
-2. **Tension / Problem** — The risk, gap, or strategic question.
-3. **Evidence / Analysis** — Data-driven proof slides (Hero Metric, Visual Monolith).
-4. **Resolution / Recommendation** — The "so what" and path forward.
-5. **Close** — Call to action or next steps. Keep it tight.
+**2. Chart honesty: decoration → labeled evidence.**
+- Bad: gradient-filled CSS bars with no axes ("cleaner look"), values only on hover, five colors, no source.
+- Good: Chart.js horizontal bar sorted by value, one primary-color focal bar and grey context bars, horizontal axis labeled "Store sales ($M)," dashed benchmark line labeled "Industry average $3M" on the chart, data labels on each bar, source line present.
+- Why: an executive must decode the chart cold — type matched to an item comparison, every scale labeled, benchmark on the chart, one focal color.
 
-Not every deck needs all five beats. Match structure to content.
+**3. Copy: AI-slop → executive prose.**
+- Bad: "Leveraging cutting-edge automation to unlock robust operational synergies across the value chain."
+- Good: "Robotic process automation cuts labor cost 18% while lifting throughput."
+- Why: banned words out, concrete verb, a number, and a consequence. Passes the partner test.
 
----
+## Self-check (run per slide, fix before delivering)
 
-## I. COGNITIVE CONTROL LAYER (The 3-Second Rule)
-
-A slide is a decision weapon, not a document.
-
-**Volume Control per slide:**
-- Max 3 supporting elements
-- Max 120 total words
-- Max 4 visual containers
-- **Rule:** If more content exists → collapse into abstraction
-
-**Visual Hierarchy — must be immediately obvious in 3 seconds:**
-1. **Governing Thought** (Action Title)
-2. **ONE Visual Anchor** (Hero metric or chart)
-3. **Supporting Proof**
-
----
-
-## II. NARRATIVE LAYOUT ENGINE
-
-Select a layout based on **narrative energy**, not content format.
-
-### 1. Hero Metric (Numeric Dominance)
-- **Use when:** The insight is a decisive number
-- **Structure:** 60/40 weighted composition. Massive `text-7xl` or `text-8xl` metric
-- **Tech:** Use `tabular-nums tracking-tighter` for numerical precision
-
-### 2. Tension (Risk vs Opportunity)
-- **Use when:** Highlighting contrast or decision
-- **Structure:** Weighted split (default 60/40). "Current State" (Muted/Grey) vs "Future State" (Emphasized/Blue)
-- **Rule:** Never symmetric visual weight
-
-### 3. Transformation (Process Flow)
-- **Use when:** Demonstrating progression
-- **Structure:** Horizontal flow only. Chevron or connected steps
-- **Ban:** No vertical stacked lists
-
-### 4. Visual Monolith
-- **Use when:** The chart IS the story
-- **Structure:** Single dominant card occupying ~80% of space. Minimal surrounding text
-
-### 5. The Argument (Three Pillars)
-- **Use when:** Proving a thesis
-- **Structure:** Max 3 cards. Variable vertical heights (avoid identical card sizing)
-
----
-
-## III. COMPOSITION SYSTEM (Non-Negotiable)
-
-### Intentional Asymmetry
-- **Banned:** 50/50 splits (unless true comparison), perfect 2x2 grids, evenly sized cards
-- **Required:** 60/40 weighting, Hero-left / Support-right
-- "Uniformity feels templated; Variation feels designed."
-
-### Negative Space Rule
-- **Constraint:** Minimum 20% of slide must remain empty
-- **Fix:** If crowded → Reduce text. Remove a container. Combine insights. **Never shrink padding.**
-- "Breathing room = Authority."
-
-### Visual Rhythm Rule
-- Vary element scale deliberately
-- Avoid perfectly aligned bottom edges (unless using a grid)
-- Ensure one dominant focal region
-- **Do not create visual monotony**
-
----
-
-## IV. DESIGN SYSTEM (Stripe × MBB)
-
-### Canvas & Containers
-- **Canvas:** Fixed `w-full h-[600px]` (aspect-video)
-  - Texture: `bg-gradient-to-br from-slate-50 to-slate-100`
-- **Cards:** `bg-white rounded-xl border border-slate-200 p-6` or `p-8`
-- **Shadow Hierarchy:**
-  - `shadow-sm` for secondary elements
-  - `shadow-md` for the primary focal card
-  - Ban: No decorative or colored shadows
-
-### Typography
-Use system sans-serif stack. Do NOT import external fonts.
-
-- **Governing Thought:** `text-2xl font-bold text-slate-900 tracking-tight leading-snug`
-  - Never center aligned. No awkward wrapping (max 2 lines). No orphans.
-- **Body Text:** `text-slate-600 text-sm leading-relaxed`
-  - Max 2 lines per block. No widows. Analytical tone only (no marketing fluff).
-- **Metrics:** `text-slate-900 font-bold tracking-tighter tabular-nums`
-
-### Iconography
-- **Library:** `lucide-react`
-- **CRITICAL:** Always set `strokeWidth={1.5}`. Thinner icons = Premium aesthetic.
-
-### Color Semantics (Monochromatic Depth)
-- **Primary:** `text-slate-900`
-- **Accent — choose ONE per deck:**
-  - Electric Blue: `text-blue-600` / `bg-blue-600` (Standard)
-  - Growth Teal: `text-teal-600` / `bg-teal-50` (Positive)
-  - Risk Amber: `text-amber-600` / `bg-amber-50` (Warning)
-  - Critical Rose: `text-rose-600` (Loss)
-- **Rule:** No rainbow slides. Use opacity (e.g., `bg-blue-600/10`) for hierarchy.
-- **Consistency:** Same accent color across all slides in a deck.
-
----
-
-## V. CHART STRATEGY (Anti-Noise Protocol)
-
-- **Design:** No gridlines. No axes unless critical. No chart junk.
-- **Implementation:**
-  - **Bar Charts:** Use CSS flex/grid with arbitrary width values (e.g., `w-[37%]`) for precision
-  - **Line/Donut:** Use simple inline SVGs
-- **Focus:** Highlight ONLY the key bar/segment. Desaturate the rest (e.g., `bg-slate-200`).
-
----
-
-## VI. THE GOVERNING THOUGHT SYSTEM
-
-Every slide MUST have this structure:
-
-1. **Kicker:** `text-slate-400 font-bold tracking-[0.2em] text-xs uppercase` (e.g., "• STRATEGIC CONTEXT")
-2. **Action Title:** Full assertive sentence. Specific and insight-driven.
-   - Bad: "Q3 Financial Overview"
-   - Good: "Q3 revenue exceeded forecast by 15%, driven primarily by APAC expansion"
-
----
-
-## VII. ANTI-MEDIOCRITY ENFORCEMENT
-
-**Automatic Failure Conditions:**
-- Bullet lists longer than 3 items
-- Walls of text
-- Evenly sized cards (create rhythm!)
-- Overuse of icons (max 1 per card)
-- Decorative gradients (inside cards)
-- Marketing tone / Placeholder fluff
-- Dashboard aesthetic
-- Centered governing thoughts
-- Symmetric layouts without justification
-
----
-
-## VIII. FOOTER PROTOCOL
-
-Every slide must include:
-- **Bottom Left:** `SOURCE: [Source Name] Analysis; Client Data` — styled as `text-xs text-slate-400 uppercase tracking-wider`
-- **Bottom Right:** `CONFIDENTIAL – PRELIMINARY DRAFT`
-
-In multi-slide decks, the footer is rendered per-slide (not on the deck shell).
-
----
-
-## IX. EXECUTION SEQUENCE
-
-For every slide (or each slide in a deck):
-
-1. **Decode** — Identify the single governing insight
-2. **Select** — Choose the Layout Archetype based on narrative energy
-3. **Refine** — Apply asymmetrical composition and negative space rules
-4. **Silent Audit** — Before rendering, confirm:
-   - Is the governing thought specific and assertive?
-   - Is the slide readable in 5 seconds?
-   - Is there ONE clear visual focal point?
-   - Is whitespace preserved?
-   - Does this feel expensive?
-5. **Render** — Output the React artifact
-
-**Do not explain design choices. Do not describe the slide. Just build it.**
-
----
-
-## X. DATA HANDLING
-
-When the user provides raw data (uploads, pasted tables, financials):
-1. Identify the single most compelling insight in the data
-2. Shape the visual around that insight — do not try to show everything
-3. Use the Governing Thought to frame what the data means, not what it is
-4. Desaturate / de-emphasize non-essential data points
-5. If the data supports multiple insights, recommend a multi-slide deck
-
-When the user provides narrative / strategic context:
-1. Extract the core assertion
-2. Select the layout archetype that best amplifies that assertion
-3. Invent plausible supporting metrics or proof points ONLY if the user has not provided them — and label them clearly as illustrative
+- [ ] Title carries the slide's message (so-what sentence, or house-voice equivalent), ≤2 lines, active verb, no banned words
+- [ ] Reading all titles in order tells the full story (deck-level, run once)
+- [ ] Every analytical claim is attributed (source line, or in-content provenance under a house template)
+- [ ] All charts are real chart objects (Chart.js / native pptx); type matches the comparison; axes labeled horizontally with units; benchmark/average lines labeled on the chart
+- [ ] No invented figures — every missing number is a visible `[ CONFIRM · … ]` placeholder
+- [ ] No text below 15px (including chart options); all sizes from the approved scale
+- [ ] Every color maps to a palette role (primary/secondary/highlight/greyscale); no decorative or unassigned colors; same palette across all slides
+- [ ] Margins (64/48/40), aligned columns, ≥20% whitespace; no cards, shadows, gradients
+- [ ] ≤6 supporting points, ≤~8 words each; one idea per slide; slide stands alone without narration
+- [ ] Numbers rounded, units shown, figures tie out across slides
+- [ ] Copy passed the humanizer pass (no banned words/patterns; partner, evidence, verb, deletion tests)
